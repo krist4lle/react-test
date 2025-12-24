@@ -1,6 +1,6 @@
 # Next.js App Router Starter
 
-Minimal Next.js 13+ App Router setup following the agreed structure.
+Minimal Next.js 13+ App Router setup.
 
 ## Setup
 
@@ -26,32 +26,6 @@ KSENSE_API_KEY="your_api_key_here"
 
 ```bash
 npm run dev
-```
-
-## Structure
-
-```
-app/
-  layout.tsx
-  page.tsx
-  dashboard/
-    page.tsx
-    loading.tsx
-  api/
-    users/
-      route.ts
-components/
-  ui/
-    Button.tsx
-  forms/
-    UserForm.tsx
-lib/
-  services/
-    userService.ts
-models/
-  user.ts
-types/
-  api.ts
 ```
 
 ## Notes

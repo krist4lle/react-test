@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import {User} from "@/types/api";
 
 export default function AssessmentButton() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function AssessmentButton() {
         throw new Error(`Request failed (status ${response.status}).`);
       }
 
-      const users = (await response.json()) as unknown[];
+      const users = (await response.json()) as User[];
       setMessage(`Fetched ${users.length} users.`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";

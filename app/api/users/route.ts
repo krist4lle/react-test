@@ -1,12 +1,21 @@
 import { NextResponse } from "next/server";
 
 import { fetchUsers } from "@/lib/services/userService";
+import {
+  getDataQualityIssues,
+  getFeverPatients,
+  getHighRiskPatients,
+} from "@/lib/services/riskService";
 
 export async function GET() {
   try {
-    const data = await fetchUsers();
-    console.log(data);
-    return NextResponse.json(data);
+    const users = await fetchUsers();
+
+    const highRiskPatients = getHighRiskPatients(users);
+    const feverPatients = getFeverPatients(users);
+    const dataQualityIssues = getDataQualityIssues(users);
+
+    return NextResponse.json(users);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
 
