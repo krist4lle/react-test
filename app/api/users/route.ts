@@ -5,7 +5,7 @@ import { fetchUsers } from "@/lib/services/userService";
 export async function GET() {
   try {
     const data = await fetchUsers();
-
+    console.log(data);
     return NextResponse.json(data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

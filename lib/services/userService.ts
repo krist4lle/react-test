@@ -50,18 +50,41 @@ async function fetchWithRetry(
   throw lastError instanceof Error ? lastError : new Error("Request failed.");
 }
 
-export async function fetchUsers(): Promise<unknown> {
+export async function fetchUsers(): Promise<unknown[]> {
   const apiKey = getApiKey();
-  const response = await fetchWithRetry(`${BASE_URL}/patients`, {
-    headers: {
-      "x-api-key": apiKey,
-    },
-    cache: "no-store",
-  });
+  const allUsers: unknown[] = [];
+  let page = 1;
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch users (status ${response.status}).`);
+  while (page > 0) {
+    const response = await fetchWithRetry(
+      `${BASE_URL}/patients?page=${page}&limit=20`,
+      {
+        headers: {
+          "x-api-key": apiKey,
+        },
+        cache: "no-store",
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users (status ${response.status}).`);
+    }
+
+    const data = await response.json();
+    const users = data.data;
+
+    if (users.length === 0) {
+      break;
+    }
+
+    allUsers.push(...users);
+
+    if (!data.pagination.hasNext) {
+      break;
+    }
+
+    page += 1;
   }
 
-  return response.json();
+  return allUsers;
 }

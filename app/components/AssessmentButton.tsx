@@ -4,9 +4,26 @@ import { useState } from "react";
 
 export default function AssessmentButton() {
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setIsLoading(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch("/api/users", { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Request failed (status ${response.status}).`);
+      }
+
+      const users = (await response.json()) as unknown[];
+      setMessage(`Fetched ${users.length} users.`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      setMessage(`Failed to fetch users: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,6 +42,7 @@ export default function AssessmentButton() {
           Processing...
         </div>
       )}
+      {message && <p className="text-sm text-zinc-700">{message}</p>}
     </div>
   );
 }
