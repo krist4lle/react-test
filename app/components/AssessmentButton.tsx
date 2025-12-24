@@ -17,8 +17,8 @@ export default function AssessmentButton() {
         throw new Error(`Request failed (status ${response.status}).`);
       }
 
-      const users = (await response.json()) as User[];
-      setMessage(`Fetched ${users.length} users.`);
+      const data = await response.json();
+      setMessage(data.message + '. ' + data.results.score);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       setMessage(`Failed to fetch users: ${errorMessage}`);

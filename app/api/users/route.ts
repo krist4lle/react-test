@@ -6,6 +6,7 @@ import {
   getFeverPatients,
   getHighRiskPatients,
 } from "@/lib/services/riskService";
+import { submitAssessment } from "@/lib/services/submissionService";
 
 export async function GET() {
   try {
@@ -15,7 +16,13 @@ export async function GET() {
     const feverPatients = getFeverPatients(users);
     const dataQualityIssues = getDataQualityIssues(users);
 
-    return NextResponse.json(users);
+    const submission = await submitAssessment({
+      high_risk_patients: highRiskPatients,
+      fever_patients: feverPatients,
+      data_quality_issues: dataQualityIssues,
+    });
+
+    return NextResponse.json(submission);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
 
