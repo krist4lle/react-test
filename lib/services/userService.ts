@@ -1,3 +1,5 @@
+import { User } from "@/types/api";
+
 const BASE_URL = "https://assessment.ksensetech.com/api";
 
 const MAX_RETRIES = 3;
@@ -50,9 +52,9 @@ async function fetchWithRetry(
   throw lastError instanceof Error ? lastError : new Error("Request failed.");
 }
 
-export async function fetchUsers(): Promise<unknown[]> {
+export async function fetchUsers(): Promise<User[]> {
   const apiKey = getApiKey();
-  const allUsers: unknown[] = [];
+  const allUsers: User[] = [];
   let page = 1;
 
   while (page > 0) {
@@ -70,9 +72,12 @@ export async function fetchUsers(): Promise<unknown[]> {
       throw new Error(`Failed to fetch users (status ${response.status}).`);
     }
 
-    const data = await response.json();
-    const users = data.data;
+    const data = (await response.json()) as {
+      data: User[];
+      pagination: { hasNext: boolean };
+    };
 
+    const users = data.data;
     if (users.length === 0) {
       break;
     }
